@@ -1,0 +1,43 @@
+name: CD Cloud VM
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["Cloud Backend CI"]
+    types:
+      - completed
+
+jobs:
+  deploy-cloud-vm:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: self-hosted
+
+    steps:
+      - name: Update project code on VM
+        run: |
+          cd ~/robomunch-cloud-backend
+          git fetch origin main
+          git reset --hard origin/main
+
+      - name: Stop and remove old container
+        run: |
+          sudo docker stop robomunch-cloud-backend || true
+          sudo docker rm robomunch-cloud-backend || true
+
+      - name: Build Docker image
+        run: |
+          cd ~/robomunch-cloud-backend
+          sudo docker build -t robomunch-cloud-backend .
+
+      - name: Run Docker container
+        run: |
+          sudo docker run -d \
+            --name robomunch-cloud-backend \
+            -p 9000:9000 \
+            --restart unless-stopped \
+            robomunch-cloud-backend
+
+      - name: Show Docker status and logs
+        run: |
+          sudo docker ps
+          sudo docker logs robomunch-cloud-backend
