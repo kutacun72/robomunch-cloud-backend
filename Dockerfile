@@ -10,4 +10,4 @@ COPY . .
 
 EXPOSE 9000
 
-CMD ["gunicorn", "cloud_backend.wsgi:application", "--bind", "0.0.0.0:9000"]
+CMD ["gunicorn", "cloud_backend.wsgi:application", "--bind", "0.0.0.0:9000", "--access-logfile", "-", "--error-logfile", "-"]
