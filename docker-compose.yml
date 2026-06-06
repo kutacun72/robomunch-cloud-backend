@@ -1,0 +1,7 @@
+services:
+  robomunch-cloud-backend:
+    build: .
+    container_name: robomunch-cloud-backend
+    ports:
+      - "9000:9000"
+    restart: unless-stopped
