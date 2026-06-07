@@ -21,17 +21,17 @@ jobs:
 
       - name: Stop and remove old container
         run: |
-          sudo docker stop robomunch-cloud-backend || true
-          sudo docker rm robomunch-cloud-backend || true
+          docker stop robomunch-cloud-backend || true
+          docker rm robomunch-cloud-backend || true
 
       - name: Build Docker image
         run: |
           cd ~/robomunch-cloud-backend
-          sudo docker build -t robomunch-cloud-backend .
+          docker build -t robomunch-cloud-backend .
 
       - name: Run Docker container
         run: |
-          sudo docker run -d \
+          docker run -d \
             --name robomunch-cloud-backend \
             -p 9000:9000 \
             --restart unless-stopped \
@@ -39,5 +39,5 @@ jobs:
 
       - name: Show Docker status and logs
         run: |
-          sudo docker ps
-          sudo docker logs robomunch-cloud-backend
+          docker ps
+          docker logs robomunch-cloud-backend
